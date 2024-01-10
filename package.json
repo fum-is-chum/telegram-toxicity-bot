@@ -1,0 +1,25 @@
+{
+  "name": "telegram-toxicity-bot",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.ts",
+  "scripts": {
+    "build": "pnpm tsc",
+    "start": "pnpm ts-node src/index.ts",
+    "format:fix": "prettier --write \"**/*.{ts,js}\""
+  },
+  "dependencies": {
+    "@types/node": "^20.4.5",
+    "dotenv": "^16.3.1",
+    "node-telegram-bot-api": "^0.64.0"
+  },
+  "devDependencies": {
+    "@types/node-telegram-bot-api": "^0.64.0",
+    "prettier": "^3.0.3",
+    "ts-node": "^10.9.1",
+    "typescript": "^5.1.6"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
