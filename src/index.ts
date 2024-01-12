@@ -25,6 +25,9 @@ const numCPUs = Math.min(os.cpus().length, 3); // adjust how many workers to spa
     const queue: TelegramBot.Message[] = [];
     const availableWorkers: Worker[] = [];
 
+    /**
+     * Get message from queue and send it to available worker
+     */
     const sendToAvailableWorker = () => {
       if (queue.length > 0 && availableWorkers.length > 0) {
         const msg = queue.shift();
@@ -45,10 +48,12 @@ const numCPUs = Math.min(os.cpus().length, 3); // adjust how many workers to spa
       const worker = cluster.fork();
 
       worker.on('message', async (response: ResponseMessage | string) => {
-        if (isResponseMessage(response)) {
+        // if master worker receive response
+        if (isResponseMessage(response)) { 
           const formattedResponse = formatResponse(response);
           try {
             if(formattedResponse.text !== '') {
+              // send message
               bot.sendMessage(formattedResponse.chat_id, formattedResponse.text)
             }
           } finally {
@@ -71,6 +76,7 @@ const numCPUs = Math.min(os.cpus().length, 3); // adjust how many workers to spa
       }
     });
   } else {
+    // init classifier model
     try {
       Logger.highlight('Loading model...');
       await classifier.init();
@@ -80,6 +86,7 @@ const numCPUs = Math.min(os.cpus().length, 3); // adjust how many workers to spa
       Logger.error(error.message);
       process.exit(1);
     }
+
     process.on('message', (msg: TelegramBot.Message) => {
       // Process the update
       if (!msg.text) return;
@@ -93,6 +100,8 @@ const numCPUs = Math.min(os.cpus().length, 3); // adjust how many workers to spa
             msg,
             result
           };
+
+          // send response back to master
           process.send(response);
         }
       });
