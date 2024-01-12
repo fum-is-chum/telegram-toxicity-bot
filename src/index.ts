@@ -109,6 +109,8 @@ const numCPUs = Math.min(os.cpus().length, 3); // adjust how many workers to spa
 
     process.send && process.send('ready');
 
+    setInterval(() => process.send && process.send('ready'), 15000);
+
     Logger.success(`Worker ${process.pid} started`);
   }
 })();
