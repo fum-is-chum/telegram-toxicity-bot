@@ -50,11 +50,12 @@ const numCPUs = Math.min(os.cpus().length, 3); // adjust how many workers to spa
       worker.on('message', async (response: ResponseMessage | string) => {
         // if master worker receive response
         if (isResponseMessage(response)) { 
-          const formattedResponse = formatResponse(response);
+          const {chat_id, msg_id, text} = formatResponse(response);
           try {
-            if(formattedResponse.text !== '') {
+            if(text !== '') {
               // send message
-              bot.sendMessage(formattedResponse.chat_id, formattedResponse.text)
+              bot.deleteMessage(chat_id,msg_id,);
+              // bot.sendMessage(chat_id, text)
             }
           } finally {
             // Mark the worker as available after the message has been sent
@@ -109,7 +110,10 @@ const numCPUs = Math.min(os.cpus().length, 3); // adjust how many workers to spa
 
     process.send && process.send('ready');
 
-    setInterval(() => process.send && process.send('ready'), 15000);
+    setInterval(() => {
+      console.log(`Health check for worker ${process.pid}`);
+      process.send && process.send('ready');
+    }, 15000);
 
     Logger.success(`Worker ${process.pid} started`);
   }

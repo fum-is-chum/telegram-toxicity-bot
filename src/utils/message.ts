@@ -22,6 +22,7 @@ const formatResponse = (response: ResponseMessage) => {
 
   return {
     chat_id: id,
+    msg_id: msg.message_id,
     text,
   };
 }
